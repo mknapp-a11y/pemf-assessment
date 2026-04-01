@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEMF Candidacy & Goal Assessment Tool</title>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // =====================================================
+        // EMAILJS CONFIGURATION — Replace these three values
+        // with your credentials from emailjs.com
+        // =====================================================
+        const EMAILJS_PUBLIC_KEY  = 'CDcxb3fXA2CGMZMoe';
+        const EMAILJS_SERVICE_ID  = 'service_jmi579d';
+        const EMAILJS_TEMPLATE_ID = 'template_kdtzby1';
+        // =====================================================
+
+        (function() {
+            emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+        })();
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .instructions {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #495057;
+        }
+
+        .scale-guide {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .scale-item {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            border: 2px solid #dee2e6;
+        }
+
+        .scale-item strong {
+            color: #667eea;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .contact-info {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .contact-info h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-score {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 16px;
+        }
+
+        .question {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            transition: background 0.3s;
+        }
+
+        .question:hover {
+            background: #f8f9fa;
+        }
+
+        .question:last-child {
+            border-bottom: none;
+        }
+
+        .question-text {
+            flex: 1;
+            font-size: 15px;
+            color: #495057;
+        }
+
+        .score-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .score-btn {
+            min-width: 120px;
+            height: auto;
+            padding: 10px 12px;
+            border: 2px solid #dee2e6;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.3s;
+            color: #6c757d;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .score-btn:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .score-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: scale(1.1);
+        }
+
+        .total-score {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        .interpretation {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .interpretation h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .interpretation-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #495057;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .goal-clarifier {
+            margin-top: 30px;
+            padding: 25px;
+            background: #fff3cd;
+            border-radius: 10px;
+            border-left: 5px solid #ffc107;
+        }
+
+        .goal-clarifier h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .goal-clarifier p {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .goal-clarifier textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            font-size: 14px;
+            min-height: 100px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .goal-clarifier textarea:focus {
+            outline: none;
+            border-color: #e0a800;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .submit-btn, .reset-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .error-message {
+            display: none;
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .form-row { grid-template-columns: 1fr; }
+            .button-group { flex-direction: column; }
+            .submit-btn, .reset-btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>PEMF Candidacy & Goal Assessment Tool</h1>
+            <p>Understand your wellness baseline and identify areas where PEMF therapy may support your health goals</p>
+        </div>
+
+        <div class="instructions">
+            <h3>How to Complete This Assessment</h3>
+            <p style="margin-bottom: 15px;">Rate each statement based on your experience over the past month using the following scale:</p>
+            <div class="scale-guide">
+                <div class="scale-item"><strong>0:</strong> Not at all / Never</div>
+                <div class="scale-item"><strong>1:</strong> Occasionally / Mild</div>
+                <div class="scale-item"><strong>2:</strong> Frequently / Moderate</div>
+                <div class="scale-item"><strong>3:</strong> Daily / Severe</div>
+            </div>
+        </div>
